@@ -15,3 +15,8 @@ At this stage, the foundation of the project has been established:
 - Repository structure created (`src`, `docs`, `tests`, `data`)
 - Initial CLI framework with a demo `add` command
 - Architecture documentation available in `docs/architecture.md`
+
+## Usage
+Clone the repository and run the demo command:
+```bash
+cargo run -- add --amount 100 --category Food
