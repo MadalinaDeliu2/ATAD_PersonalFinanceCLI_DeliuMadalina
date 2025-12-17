@@ -1,30 +1,20 @@
-use clap::{Parser, Subcommand};
+mod cli;
+mod db;
 
-#[derive(Parser)]
-#[command(name = "finance-cli")]
-#[command(about = "Track income and expenses from the terminal", long_about = None)]
-struct Cli {
-    #[command(subcommand)]
-    command: Commands,
-}
-
-#[derive(Subcommand)]
-enum Commands {
-    Add {
-        #[arg(short, long)]
-        amount: f64,
-
-        #[arg(short, long)]
-        category: String,
-    },
-}
+use clap::Parser;
 
 fn main() {
-    let cli = Cli::parse();
+    let cli = cli::Cli::parse();
+    let conn = db::init_db();
 
-    match &cli.command {
-        Commands::Add { amount, category } => {
-            println!("Added transaction: {} in category '{}'", amount, category);
-        }
+    match cli.command {
+    cli::Commands::Add { amount, category, date } => {
+        db::add_transaction(&conn, amount, &category, date);
     }
+    cli::Commands::Search { keyword } => {
+        db::search_transactions(&conn, keyword).unwrap();
+    }
+    _ => println!("Feature not implemented yet"),
+    }
+
 }
