@@ -1,5 +1,6 @@
 mod cli;
 mod db;
+mod parser;
 
 use clap::Parser;
 
@@ -13,6 +14,9 @@ fn main() {
     }
     cli::Commands::Search { keyword } => {
         db::search_transactions(&conn, keyword).unwrap();
+    }
+	cli::Commands::Import { file, r#type } => {
+    db::import_transactions(&conn, &file, &r#type);
     }
     _ => println!("Feature not implemented yet"),
     }

@@ -1,5 +1,6 @@
 use chrono::Local;
 use rusqlite::{params, Connection, Result};
+use crate::parser::ParsedTransaction;
 
 pub fn init_db() -> Connection {
     let conn = Connection::open("finance.db").expect("Failed to open finance.db");
@@ -61,4 +62,20 @@ pub fn search_transactions(conn: &Connection, keyword: Option<String>) -> Result
     }
 
     Ok(())
+}
+
+
+
+pub fn import_transactions(conn: &Connection, file_path: &str, file_type: &str) {
+    if file_type != "csv" {
+        println!("Only CSV import is supported for now.");
+        return;
+    }
+
+    let transactions = crate::parser::parse_csv(file_path);
+    for tx in transactions {
+        add_transaction(conn, tx.amount, &tx.category, Some(tx.date));
+    }
+
+    println!("Import completed.");
 }
