@@ -1,4 +1,4 @@
-amount,category,date
--120.5,Food,12/17/2025
--75,Transport,12/18/2025
-20,Gift,12/19/2025
+amount,category,description,date
+-120.5,,uber,12/17/2025
+-75,,netflix,12/18/2025
+20,,transfer,12/19/2025

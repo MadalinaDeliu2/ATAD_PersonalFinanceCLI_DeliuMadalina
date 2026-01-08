@@ -4,6 +4,7 @@ use std::io::{BufReader, BufRead};
 pub struct ParsedTransaction {
     pub amount: f64,
     pub category: String,
+	pub description: String,
     pub date: String,
 }
 
@@ -16,11 +17,12 @@ pub fn parse_csv(file_path: &str) -> Vec<ParsedTransaction> {
         .filter_map(|line| {
             if let Ok(entry) = line {
                 let parts: Vec<&str> = entry.split(',').collect();
-                if parts.len() >= 3 {
+                if parts.len() >= 4 {
                     let amount = parts[0].trim().parse().ok()?;
                     let category = parts[1].trim().to_string();
-                    let date = parts[2].trim().to_string();
-                    Some(ParsedTransaction { amount, category, date })
+					let description = parts[2].trim().to_string();
+                    let date = parts[3].trim().to_string();
+                    Some(ParsedTransaction { amount, category, description, date })
                 } else {
                     None
                 }

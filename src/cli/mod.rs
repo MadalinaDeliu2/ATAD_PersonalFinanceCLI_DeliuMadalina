@@ -16,6 +16,8 @@ pub enum Commands {
         #[arg(short, long)]
         category: String,
         #[arg(short, long)]
+		description: String,
+        #[arg(short, long)]
         date: Option<String>,
     },
 
