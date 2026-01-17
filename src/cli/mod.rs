@@ -44,4 +44,6 @@ pub enum Commands {
         #[arg(short, long)]
         keyword: Option<String>,
     },
+	Sql { #[arg(short, long)] query: String, },
+
 }

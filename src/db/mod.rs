@@ -14,6 +14,13 @@ pub fn init_db() -> Connection {
         )",
         [],
     ).expect("Failed to create transactions table");
+	
+	conn.execute( "CREATE TABLE IF NOT EXISTS budgets ( 
+					category TEXT PRIMARY KEY, 
+					limit_amount REAL NOT NULL 
+					)", 
+					[], 
+	).expect("Failed to create budgets table");
 
     conn
 }
@@ -80,3 +87,24 @@ pub fn import_transactions(conn: &Connection, file_path: &str, file_type: &str) 
 
     println!("Import completed.");
 }
+
+pub fn run_sql(conn: &Connection, query: &str) {
+    let mut stmt = conn.prepare(query).expect("Invalid SQL");
+    let column_count = stmt.column_count();
+
+    let rows = stmt
+        .query_map([], |row| {
+            let mut values = Vec::new();
+            for i in 0..column_count {
+                let v: Result<String, _> = row.get(i);
+                values.push(v.unwrap_or("NULL".into()));
+            }
+            Ok(values)
+        })
+        .expect("Query failed");
+
+    for row in rows {
+        println!("{:?}", row.unwrap());
+    }
+}
+
