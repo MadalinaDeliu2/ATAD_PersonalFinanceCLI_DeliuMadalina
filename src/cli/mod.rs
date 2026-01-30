@@ -11,13 +11,13 @@ pub struct Cli {
 #[derive(Subcommand)]
 pub enum Commands {
     Add {
-        #[arg(short, long)]
+        #[arg(short = 'a', long)]
         amount: f64,
-        #[arg(short, long)]
+        #[arg(short = 'c', long)]
         category: String,
-        #[arg(short, long)]
+        #[arg(short = 'd', long)]
 		description: String,
-        #[arg(short, long)]
+        #[arg(short = 'D', long)]
         date: Option<String>,
     },
 
