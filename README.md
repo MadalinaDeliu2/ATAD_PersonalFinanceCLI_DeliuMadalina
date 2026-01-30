@@ -135,6 +135,6 @@ The CSV file must contain the following columns: amount, category, description, 
 - Negative amounts = expenses  
 - Positive amounts = income  
 - Date format must be **MM/DD/YYYY**  
-- Category and description are free text  
+- Description is free text  
 
 
