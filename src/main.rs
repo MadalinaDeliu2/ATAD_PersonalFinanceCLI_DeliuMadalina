@@ -3,10 +3,14 @@ mod db;
 mod parser;
 mod categorize;
 mod budget;
+mod reports;
+mod ui;
+pub mod models;
+
 
 use clap::Parser;
 
-fn main() {
+fn main()  {
     let cli = cli::Cli::parse();
     let conn = db::init_db();
 
@@ -32,9 +36,23 @@ fn main() {
 		
 	}
 	
+	cli::Commands::Reports { month, year } => {
+    let month = month.unwrap_or_else(|| chrono::Local::now().format("%m").to_string());
+    let year  = year.unwrap_or_else(|| chrono::Local::now().format("%Y").to_string());
+
+    let total = reports::monthly_spending(&conn, &month, &year);
+    println!("Total spending for {}/{}: {} lei", month, year, total);
+
+    reports::category_breakdown(&conn, &month, &year);
+    }
+
+	
 	cli::Commands::Sql { query } => {
     db::run_sql(&conn, &query);
-}
+    }
+	
+	cli::Commands::Tui => { ui::run_tui(&conn).expect("Failed to launch TUI");
+	}
 
 
     _ => println!("Feature not implemented yet"),

@@ -1,5 +1,7 @@
 use chrono::Local;
 use rusqlite::{params, Connection, Result};
+use crate::models::transaction::Transaction;
+
 
 pub fn init_db() -> Connection {
     let conn = Connection::open("finance.db").expect("Failed to open finance.db");
@@ -107,4 +109,53 @@ pub fn run_sql(conn: &Connection, query: &str) {
         println!("{:?}", row.unwrap());
     }
 }
+
+
+pub fn load_transactions(conn: &Connection) -> Result<Vec<Transaction>, rusqlite::Error> {
+    let mut stmt = conn.prepare(
+        "SELECT id, amount, category, description, date FROM transactions ORDER BY id ASC"
+    )?;
+
+    let rows = stmt.query_map([], |row| {
+        Ok(Transaction {
+            id: row.get(0)?,
+            amount: row.get(1)?,
+            category: row.get(2)?,
+            description: row.get(3)?,
+            date: row.get(4)?,
+        })
+    })?;
+
+    let mut transactions = Vec::new();
+    for t in rows {
+        transactions.push(t?);
+    }
+
+    Ok(transactions)
+}
+
+use crate::models::budget::Budget;
+
+pub fn load_budgets(conn: &Connection) -> Result<Vec<Budget>, rusqlite::Error> {
+    let mut stmt = conn.prepare(
+        "SELECT category, limit_amount FROM budgets ORDER BY category ASC"
+    )?;
+
+    let rows = stmt.query_map([], |row| {
+        Ok(Budget {
+            category: row.get(0)?,
+            limit_amount: row.get(1)?,
+        })
+    })?;
+
+    let mut budgets = Vec::new();
+    for b in rows {
+        budgets.push(b?);
+    }
+
+    Ok(budgets)
+}
+
+
+
 

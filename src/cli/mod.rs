@@ -28,9 +28,11 @@ pub enum Commands {
         r#type: String,
     },
 
-    Report {
-        #[arg(short, long)]
-        month: Option<String>,
+    Reports {
+    #[arg(long)]
+    month: Option<String>,   
+    #[arg(long)]
+    year: Option<String>,   
     },
 
     Budget {
@@ -45,5 +47,6 @@ pub enum Commands {
         keyword: Option<String>,
     },
 	Sql { #[arg(short, long)] query: String, },
+	Tui,
 
 }
